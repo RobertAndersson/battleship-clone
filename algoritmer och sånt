@@ -1,0 +1,61 @@
+algoritmer och sånt
+FRÅGA
+ - skriver vi allt på engelska? eller blandar vi? gött om alla variabler och text är på engelska, men man glömmer så lätt bort sig
+
+
+GAMEPLAY
+ - user1: starta spel -> ny rad i databasen inl lösenord, spara gameId i session eller cashe
+ - user2: leta upp spel, skriv lösenord -> om match spara gameId i session/cashe
+ - koppla ihop användarna PROBLEM  - hur ser vi till att kontrollera att ny spelare till kommit? fråga databasen var 5e sekund? som de förklarar här http://stackoverflow.com/questions/6402784/designing-multiplayer-game-connect-two-players finns lurigare grejjer här http://stackoverflow.com/questions/4174521/how-to-implement-a-chat-room-using-jquery-php men det såg lite lurigt ut? men då får man ju lära sig något nytt. men jag tänker att man kan börja med en version av ajax motsvarande det man får lära sig i e-tjänster
+ - förbereda spelet: Först skapas ett dokument på servern med detta spels gameId. (FRÅGA/PROBLEM ska det först sparas en "tom" plan som sedan en båt i taget läggs till på eller ska filerna byggas på eftersom? ska vi ha en fil per spelare? gameIdplayer1  och gameIdplayer2 känns ju smidigare?) spelarna får placera ut sina skepp eller så kör man random. i början av utvecklingen föreslår jag att vi kör fast utplacering för att få logiken att funka och sedan utvecklar man interaktiviteten. när spelaren får skriva ut själv föreslår jag något i stil med detta http://miloq.blogspot.se/2011/05/coordinates-mouse-click-canvas.html De får klicka på en båtbild ("den båten vill jag placera ut") och då markeras det m h a js & css sedan klickar man på canvasen, js tar bort bilden på båten från båtlistan och ritar ut en sådan bild på canvasen. då måste båtens plats sparas där vi sparar datan om spelplanen. när det är tomt i båtlistan skrivs det in i databasen att spelaren är klar. väntar på att båda spelarna är klara och sedan...
+ - initera spel! spelare1 början, motspelarens plan läses in (Julle whineade på att ett frågespel sparade denna data på klienten och att det är n00bigt så det är att föredra att vi bara läser av det från servern inför varje spelares tur). ritar ut en plan accordingly. spelaren klickar där den vill bomba, nytt ajaxrequest som kollar om det är träff eller miss. ritar ut på canvasen accordingly, sparar data i XML(?)-dokumentet. nästa spelares tur
+ - hel båt träffad! måste kontrolleras vid varje träff. hur ritar vi ut detta? hur meddelas detta?
+ - alla båtar träffade! måste kontrolleras vid varje träff. eller så räknar man antalet träffar (sparar i session/cache(med cashe menar jag nog cookie)) om alla båtar är sänkta. avsluta spel. 
+
+
+
+DATABAS
+ - gameId eller gameID (<-- vilket är snyggast? snyggast att vara konsekventa och då får man bestämma rätt direkt!)
+ - timestarted (så att om det var för länge sedan kan man ta bort det från databasen)
+ - ev player1 & player2?
+ - vems tur det är. då kanske man kan skriva player1 och player2. detta kan då också sparas i session/cache
+ - spel avslutat, kanske kan sparas i form av vinnaren. så kolumnen heter winner och har värdet player2 kanske?
+
+
+ förslag XML
+ <square>
+ <!--ska det vara kooridinater i stil med x,y på skärmen(som när man läser av musklicket) eller kanske bättre att döpa dem till x-index och y-index?-->
+ 	<x-coordinate>0</x-coordinate>
+ 	<y-coordinate>0</y-coordinate>
+ 	<object>
+ 	<!--vilken sort båt, tänker att vi kanske döper båtmallarna till boat1 boat2? så kan man skriva boat1 här, då vet man. eller bara sparar "/img/boat1.jpeg" typ-->
+ 	<!-- vi måste även få veta vilken del av båten detta är och åt vilket håll?>
+ 	</object>
+ </square>
+
+
+ om när man läser av XMLen kör typ
+ foreach (square in XML)
+ {
+ 	if(object != null)
+ 	{
+ 		$boatsquare = new boatobject = {
+ 			//boatttype är då typ boat1.png
+ 			boattype = square.boattype;
+ 			boat-x = square.x-coordinate;
+ 			boat-y = square.y-coordinate;
+ 			boat-vertical = square.vertical //true eller false, eller spara på helt annat sätt
+ 		}
+ 		//en lista
+ 		boatlist.add(boat)
+ 	}
+
+
+ }
+
+ //räkna så att om boat1's storlek är 3x1 att det faktiskt finns 3 båtplatser i boatlist som har boattype:n boat1
+
+ //om alla rutor stämmer och alla båtar finns -> rita ut alla rutor på canvasen och sen rita ut båtarna ovanpå. 
+
+ //om vi är duktiga kanske vi inte behöver rita ut varje gång utan då läser man bara av om det är träff eller inte och ritar ut "ringar på vattnet" eller "explosion"
+
